@@ -16,7 +16,7 @@ Served via GitHub Pages from [`index.html`](index.html).
 | --- | --- |
 | `index.html` | Self-contained, deployable bundle (DC runtime + fonts + markup + canvas logic inline). This is what GitHub Pages serves. |
 | `EMBR Hero.html` | Identical copy of the original bundle export. |
-| `EMBR Hero.dc.html` | Claude Design source (`<x-dc>` component + `DCLogic`). Imported from the [Claude Design project](https://claude.ai/design/p/552b8884-0864-4521-900f-37a2097657ff). |
+| `EMBR Hero.dc.html` | Claude Design source (`<x-dc>` component + `DCLogic`). Imported from the [Claude Design project](https://claude.ai/design/p/552b8884-0864-4521-900f-37a2097657ff) via the design MCP (`/design-login` required). |
 
 ## Source
 
