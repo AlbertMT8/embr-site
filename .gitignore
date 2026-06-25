@@ -1,2 +1,4 @@
 .DS_Store
 .claude/
+# Handoff archive (contains EMBR_Pitch_Deck.pdf — not for public publishing)
+*.zip
