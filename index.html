@@ -14,8 +14,11 @@
   <style>
     html,body{margin:0;background:#0b0a09}
     @keyframes embrCue { 0%,100%{transform:translateY(0);opacity:.5} 50%{transform:translateY(5px);opacity:1} }
+    .embr-contact:hover{background:rgba(184,152,92,0.12);border-color:rgba(184,152,92,0.85);color:#d8b878}
+    .embr-email:hover{color:#fff;border-bottom-color:rgba(255,255,255,0.6)}
     /* Mobile only — desktop layout is untouched */
     @media (max-width:640px){
+      .embr-contact-wrap{left:18px!important;bottom:20px!important;flex-direction:column-reverse!important;align-items:flex-start!important;gap:9px!important}
       .embr-topbar{top:18px!important;left:18px!important;right:18px!important}
       .embr-fig{font-size:8.5px!important;letter-spacing:1.4px!important}
       .embr-panel{width:88vw!important;top:90px!important;transform:translateX(-50%)!important;flex-direction:column!important;gap:20px!important;align-items:stretch!important}
@@ -88,6 +91,11 @@
       </div>
 
       <div ref="{{ setHint }}" style="position:absolute;bottom:30px;right:34px;font-size:9.5px;letter-spacing:2.5px;color:#857f76;transition:opacity 0.6s ease;pointer-events:none">MOVE CURSOR TO CAPTURE →</div>
+
+      <div class="embr-contact-wrap" style="position:absolute;bottom:26px;left:34px;display:flex;align-items:center;gap:14px;pointer-events:none">
+        <button ref="{{ setContact }}" class="embr-contact" type="button" style="pointer-events:auto;font-family:'JetBrains Mono',ui-monospace,monospace;background:transparent;border:1px solid rgba(184,152,92,0.45);color:#b8985c;font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;padding:10px 16px;cursor:pointer;transition:background 0.25s ease,border-color 0.25s ease,color 0.25s ease">Get in touch</button>
+        <a ref="{{ setEmail }}" class="embr-email" href="#" style="pointer-events:auto;font-size:11px;letter-spacing:1px;color:#cfc9bf;text-decoration:none;border-bottom:1px solid rgba(207,201,191,0.4);opacity:0;transform:translateX(-8px);transition:opacity 0.45s ease,transform 0.45s ease;white-space:nowrap"></a>
+      </div>
     </div>
   </div>
 </div>
@@ -110,6 +118,8 @@ class Component extends DCLogic {
   setCol1 = (el) => { this.col1 = el; };
   setCol2 = (el) => { this.col2 = el; };
   setDiv = (el) => { if (el) (this.divs = this.divs || []).push(el); };
+  setContact = (el) => { this.contactEl = el; };
+  setEmail = (el) => { this.emailEl = el; };
 
   componentDidMount() {
     this.dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -132,6 +142,22 @@ class Component extends DCLogic {
     window.addEventListener('resize', this._onResize);
     window.addEventListener('mousemove', this._onMove);
     window.addEventListener('mouseleave', this._onLeave);
+    this._onContact = () => {
+      if (this._revealed) return;
+      this._revealed = true;
+      const addr = 'pkntkm' + '@' + 'sas.upenn.edu';
+      if (this.emailEl) {
+        this.emailEl.textContent = addr;
+        this.emailEl.href = 'mailto:' + addr;
+        this.emailEl.style.opacity = '1';
+        this.emailEl.style.transform = 'none';
+      }
+      if (this.contactEl) {
+        this.contactEl.style.borderColor = 'rgba(184,152,92,0.9)';
+        this.contactEl.style.background = 'rgba(184,152,92,0.12)';
+      }
+    };
+    if (this.contactEl) this.contactEl.addEventListener('click', this._onContact);
     this.loop();
   }
 
@@ -140,6 +166,7 @@ class Component extends DCLogic {
     window.removeEventListener('resize', this._onResize);
     window.removeEventListener('mousemove', this._onMove);
     window.removeEventListener('mouseleave', this._onLeave);
+    if (this.contactEl && this._onContact) this.contactEl.removeEventListener('click', this._onContact);
   }
 
   buildPool() {
@@ -396,7 +423,8 @@ class Component extends DCLogic {
       setCanvas: this.setCanvas, setSection: this.setSection, setScroll: this.setScroll, setPoints: this.setPoints,
       setFig: this.setFig, setHint: this.setHint, setHero: this.setHero, setHead: this.setHead,
       setSub: this.setSub, setCursor: this.setCursor, setDim: this.setDim, setCue: this.setCue,
-      setCol0: this.setCol0, setCol1: this.setCol1, setCol2: this.setCol2, setDiv: this.setDiv
+      setCol0: this.setCol0, setCol1: this.setCol1, setCol2: this.setCol2, setDiv: this.setDiv,
+      setContact: this.setContact, setEmail: this.setEmail
     };
   }
 }
