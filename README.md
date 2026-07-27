@@ -1,36 +1,45 @@
-# EMBR — Hero
+# EMBR — skilled hands, captured
 
-Interactive hero for **EMBR · Tactile Data Systems**.
+Landing page for **EMBR** — egocentric, tactile, and mocap data captured from
+skilled hands on real production lines.
 
-A point-cloud rendering of a human hand on an HTML canvas. At rest the cursor
-"captures" nearby points (mocap-style tracking bracket, gold tracer links, live
-X/Y/pressure readout). **As you scroll**, the hand point-cloud disperses into a
-contact-data field, the `FIG.01` label flips to `FIG.02 — CONTACT DATA FIELD`,
-and a three-column panel reveals the story: `01 / DATA`, `02 / ENVIRONMENT`
-(recorded in live factories), `03 / SCALE` (30,000+ workers).
+A scroll-driven site built around 15 clips of real factory work: a full-bleed
+hero clip track, a coverage section, a geography/accuracy section, and a
+closing CTA.
 
 ## Live site
 
-Served via GitHub Pages: **https://ben-jpg-del.github.io/embr-hero/**
+**https://ben-jpg-del.github.io/embr-hero/**
 
 ## How it's hosted
 
-The page is the actual Claude Design component running standalone via its
-runtime. `index.html` loads `support.js`, which boots React/ReactDOM (UMD, from
-unpkg) and renders the `<x-dc>` component — pixel-identical to the design. The
-only runtime dependencies are the unpkg CDN (React/ReactDOM) and Google Fonts
-(JetBrains Mono).
+The page is the Claude Design component running standalone via its runtime.
+`index.html` loads `support.js`, which boots React/ReactDOM (UMD, from unpkg)
+and renders the `<x-dc>` component — pixel-identical to the design. Runtime
+dependencies: unpkg (React/ReactDOM) and Google Fonts (Archivo + JetBrains Mono).
 
 ## Files
 
-| File | Purpose |
+| Path | Purpose |
 | --- | --- |
-| `index.html` | Served entry — a copy of `EMBR Hero.dc.html`. This is what GitHub Pages serves. |
-| `EMBR Hero.dc.html` | **Canonical Claude Design source** (`<x-dc>` markup + `class Component extends DCLogic`), imported from the [design project](https://claude.ai/design/p/552b8884-0864-4521-900f-37a2097657ff) handoff bundle. The scroll experience. |
-| `support.js` | Claude Design (`dc-runtime`) — parses `<x-dc>`, compiles the logic, mounts via React. |
-| `EMBR Hero.html` | **v1 archived bundle** — the earlier *static* hero (single 100vh, no scroll). Fully self-contained (fonts + runtime inlined, no CDN). Kept for reference; not served. |
+| `index.html` | Served entry — a copy of `EMBR.dc.html`. This is what GitHub Pages serves. |
+| `EMBR.dc.html` | **Canonical Claude Design source** (`<x-dc>` markup + `class Component extends DCLogic`). |
+| `EMBR Animation Options.dc.html` | Design exploration of overlay animation variants. Not linked from the site. |
+| `support.js` | Claude Design runtime (`dc-runtime`) — parses `<x-dc>`, compiles the logic, mounts via React. |
+| `clips/*.mp4` | 15 factory clips referenced as `clips/<slug>.mp4`. |
+| `clips/thumbs/*.jpg` | Poster frames, used as each video's `poster`. |
+| `embr-logo.png`, `embr-mark.png` | Brand assets. |
 
-## Source
+## Editing
 
-Built in [Claude Design](https://claude.ai/design/p/552b8884-0864-4521-900f-37a2097657ff).
-Edit `EMBR Hero.dc.html`, then mirror it to `index.html` to redeploy.
+Edit `EMBR.dc.html`, then mirror it to `index.html` to redeploy:
+
+```bash
+cp "EMBR.dc.html" index.html && git commit -am "Update site" && git push
+```
+
+## Not published
+
+The handoff `uploads/` folder (pitch deck PDF, screenshots, working notes, and
+duplicate copies of the clips) is deliberately excluded from this repo, as is
+the handoff `.zip` itself — see `.gitignore`.

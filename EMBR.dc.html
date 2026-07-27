@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>EMBR — skilled hands, captured</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html{background:#000}
+body{margin:0;background:#000;color:#fff;font-family:Archivo,"Helvetica Neue",Helvetica,sans-serif;-webkit-font-smoothing:antialiased;text-wrap:pretty}
+a{color:#fff;text-decoration:none}
+a:hover{color:#8a8a8a}
+::selection{background:#fff;color:#000}
+</style>
+</helmet>
+
+<div style="background:#000">
+
+<header style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 32px;mix-blend-mode:difference">
+  <a href="#heroTrack" aria-label="EMBR home" style="display:block"><img src="embr-logo.png" alt="EMBR" style="display:block;height:24px;width:auto"></a>
+  <nav style="display:flex;align-items:center;gap:20px">
+    <a href="https://www.linkedin.com/company/embr" target="_blank" rel="noreferrer" aria-label="LinkedIn" style="display:flex;color:#fff" style-hover="color:#9a9a9a"><svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.05A4.2 4.2 0 0 1 16.6 8.7c3.1 0 4.4 2 4.4 5.2V21h-4v-6.2c0-1.5-.5-2.5-1.9-2.5-1.1 0-1.8.75-2.05 1.5-.1.25-.15.6-.15 1V21H9V9Z"/></svg></a>
+    <a href="mailto:hello@embr.ai" aria-label="Email" style="display:flex;color:#fff" style-hover="color:#9a9a9a"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.6" y="4.6" width="18.8" height="14.8" rx="1.6"/><path d="m3.4 6.4 8.6 6.4 8.6-6.4"/></svg></a>
+  </nav>
+</header>
+
+<section id="heroTrack" style="position:relative;height:125vh;background:#000">
+  <div id="heroSticky" style="--hp:0;position:sticky;top:0;height:100svh;overflow:hidden;background:#000">
+  <div id="embr-hero-clips" style="position:absolute;inset:0">
+    <sc-for list="{{ heroClips }}" as="c" hint-placeholder-count="4">
+      <div style="position:absolute;inset:0;opacity:0;transition:opacity 420ms linear">
+        <video data-clip="{{ c.slug }}" playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08) brightness(.94)"></video>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.28) 32%,rgba(0,0,0,.38) 60%,rgba(0,0,0,.88) 100%)"></div>
+  <div style="position:absolute;inset:0;box-shadow:inset 0 0 300px 70px rgba(0,0,0,.7)"></div>
+
+  <div style="{{ heroBoxStyle }}">
+    <h1 style="margin:0;font-size:clamp(46px,10.4vw,196px);font-weight:500;letter-spacing:-.045em;line-height:.9">Skilled hands,<br>captured.</h1>
+  </div>
+
+  <div style="position:absolute;left:32px;right:32px;bottom:26px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;opacity:calc(1 - var(--hp,0) * 1.35);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.62)">
+    <span style="display:block;max-width:520px;line-height:1.7">Multimodal robotics data from real workplaces<br>across Southeast Asia</span>
+    <span id="heroCaption" style="text-align:right;max-width:280px;line-height:1.7;color:rgba(255,255,255,.5)"></span>
+  </div>
+  </div>
+</section>
+
+<section id="covTrack" style="position:relative;z-index:1;background:#000;height:230vh">
+  <div id="covSticky" style="--p:0;--lift:0;position:sticky;top:0;height:100svh;overflow:hidden;transform:translateY(calc(var(--lift,0) * -1px));display:grid;grid-template-columns:1.34fr .66fr;align-items:center;gap:clamp(24px,4vw,72px);padding:0 clamp(18px,2.4vw,32px)">
+
+    <div style="position:relative;height:min(72svh,700px);perspective:2600px;opacity:var(--o,1);transform:scale(var(--s,1))">
+      <div style="position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(14deg) rotateY(-29deg) translateX(9%) scale(.72)">
+        <div style="position:absolute;top:50%;left:50%;width:100%;aspect-ratio:3/2;transform:translate(-50%,-50%);transform-style:preserve-3d">
+
+        <div style="position:absolute;left:0;right:0;bottom:0;height:calc(var(--p) * 400px);transform-origin:50% 100%;transform:translateZ(calc(var(--p) * -130px)) rotateX(-90deg);background:linear-gradient(0deg,rgba(255,255,255,.16),rgba(255,255,255,.03));border-left:1px solid rgba(255,255,255,.22);border-right:1px solid rgba(255,255,255,.22);opacity:var(--p)"></div>
+        <div style="position:absolute;right:0;top:0;bottom:0;width:calc(var(--p) * 400px);transform-origin:100% 50%;transform:translateZ(calc(var(--p) * -130px)) rotateY(90deg);background:linear-gradient(90deg,rgba(255,255,255,.13),rgba(255,255,255,.02));border-top:1px solid rgba(255,255,255,.22);border-bottom:1px solid rgba(255,255,255,.22);opacity:var(--p)"></div>
+
+        <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,calc(.1 + var(--p) * .24));border-radius:4px;overflow:hidden;background:rgba(0,0,0,.55);transform:translateZ(calc(var(--p) * -130px));opacity:calc(.12 + var(--p) * .88)"><div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:52px 52px"></div><span style="position:absolute;left:14px;top:12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6);opacity:calc(var(--p) * 2.6 - .1)">Capture volume</span></div>
+
+        <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,.3);border-radius:4px;overflow:hidden;background:#050505">
+          <video data-clip="06_pneumatic_panel_adjustment" data-pos="29" playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(1.06)"></video>
+          <span style="position:absolute;left:14px;top:12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px #000">Raw capture</span>
+          <span style="position:absolute;left:14px;bottom:12px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:rgba(255,255,255,.72);text-shadow:0 1px 6px #000">Pneumatic panel adjustment</span>
+        </div>
+
+        <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,calc(.16 + var(--p) * .34));border-radius:4px;overflow:hidden;background:rgba(0,0,0,.34);transform:translateZ(calc(var(--p) * 90px));opacity:calc(.22 + var(--p) * .78)">
+          <div ref="{{ poseRef }}" style="position:absolute;inset:0"></div>
+          <span style="position:absolute;left:14px;top:12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.86);opacity:calc(var(--p) * 2.6 - .2)">Hand pose</span>
+        </div>
+
+        <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,calc(.14 + var(--p) * .34));border-radius:4px;overflow:hidden;background:rgba(0,0,0,.3);transform:translateZ(calc(var(--p) * 180px));opacity:calc(.14 + var(--p) * .86)">
+          <div style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(18,1fr);grid-template-rows:repeat(11,1fr)">
+            <sc-for list="{{ tactile }}" as="t" hint-placeholder-count="198">
+              <div style="{{ t.s }}"></div>
+            </sc-for>
+          </div>
+          <span style="position:absolute;left:14px;top:12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.8);opacity:calc(var(--p) * 2.6 - .7)">Tactile force</span>
+        </div>
+
+        <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,calc(.12 + var(--p) * .34));border-radius:4px;overflow:hidden;background:rgba(0,0,0,.26);transform:translateZ(calc(var(--p) * 270px));opacity:calc(.1 + var(--p) * .9)">
+          <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:46px 46px"></div>
+          <sc-for list="{{ boxes }}" as="b" hint-placeholder-count="5">
+            <div style="{{ b.s }}"><span style="position:absolute;left:0;top:-17px;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:rgba(255,255,255,.72)">{{ b.t }}</span></div>
+          </sc-for>
+          <span style="position:absolute;left:14px;top:12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75);opacity:calc(var(--p) * 2.6 - 1.2)">Action labels + full SOP</span>
+        </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:clamp(12px,1.8vh,24px);align-content:center;max-width:520px;min-height:0;max-height:100%;opacity:var(--o,1);transform:translateY(calc((1 - var(--o,1)) * 18px))">
+      <p style="margin:0;display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8a8a8a"><span style="display:inline-block;width:0;height:0;border-left:7px solid #8a8a8a;border-bottom:7px solid transparent"></span>Coverage</p>
+      <h2 style="margin:0;font-size:clamp(30px,3.7vw,56px);font-weight:500;letter-spacing:-.035em;line-height:1.05">Serving data that actually matters.</h2>
+      <p style="margin:0;font-size:16px;line-height:1.7;color:#b0b0b0">One schema holds every capture, so a trim line and a machine shop arrive frame-aligned across video, pose, force, action label and the full SOP. The rig itself adapts to the work: we tune sensors, mounting and annotation depth per task, then deliver against the same standard.</p>
+      <div style="display:grid;gap:1px;background:rgba(255,255,255,.12);border-top:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12);margin-top:8px">
+        <sc-for list="{{ stats }}" as="st" hint-placeholder-count="2">
+          <div style="background:#000;display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:16px 2px">
+            <span style="font-size:clamp(28px,3vw,44px);font-weight:500;letter-spacing:-.045em;line-height:1">{{ st.n }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#8a8a8a;text-align:right;max-width:22ch">{{ st.k }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="accTrack" style="position:relative;z-index:2;background:#000;height:230vh">
+  <div id="accSticky" style="--p:0;--lift:0;position:sticky;top:0;height:100svh;overflow:hidden;transform:translateY(calc(var(--lift,0) * -1px));display:grid;grid-template-columns:.66fr 1.34fr;align-items:center;gap:clamp(24px,4vw,72px);padding:0 clamp(18px,2.4vw,32px)">
+
+    <div style="display:grid;gap:clamp(12px,1.8vh,24px);align-content:center;max-width:520px;min-height:0;max-height:100%;opacity:var(--o,1);transform:translateY(calc((1 - var(--o,1)) * 18px));order:1">
+      <p style="margin:0;display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8a8a8a"><span style="display:inline-block;width:0;height:0;border-left:7px solid #8a8a8a;border-bottom:7px solid transparent"></span>Access</p>
+      <h2 style="margin:0;font-size:clamp(28px,3.5vw,52px);font-weight:500;letter-spacing:-.035em;line-height:1.05">{{ geoLine }}</h2>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 26px;margin-top:6px">
+        <sc-for list="{{ sectors }}" as="x" hint-placeholder-count="10">
+          <div style="display:flex;align-items:baseline;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.09)">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#5e5e5e">{{ x.n }}</span>
+            <span style="font-size:13.5px;line-height:1.35;color:#d2d2d2">{{ x.t }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin:6px 0 0;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#6f6f6f">and more coming soon</p>
+    </div>
+
+    <div style="position:relative;height:min(72svh,700px);perspective:2600px;opacity:var(--o,1);transform:scale(var(--s,1));order:2">
+      <div style="position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(14deg) rotateY(29deg) translateX(-9%) scale(.72)">
+        <div style="position:absolute;top:50%;left:50%;width:100%;aspect-ratio:3/2;transform:translate(-50%,-50%);transform-style:preserve-3d">
+
+        <div style="position:absolute;left:0;right:0;bottom:0;height:calc(var(--p) * 400px);transform-origin:50% 100%;transform:translateZ(calc(var(--p) * -130px)) rotateX(-90deg);background:linear-gradient(0deg,rgba(255,255,255,.16),rgba(255,255,255,.03));border-left:1px solid rgba(255,255,255,.22);border-right:1px solid rgba(255,255,255,.22);opacity:var(--p)"></div>
+        <div style="position:absolute;left:0;top:0;bottom:0;width:calc(var(--p) * 400px);transform-origin:0% 50%;transform:translateZ(calc(var(--p) * -130px)) rotateY(-90deg);background:linear-gradient(270deg,rgba(255,255,255,.13),rgba(255,255,255,.02));border-top:1px solid rgba(255,255,255,.22);border-bottom:1px solid rgba(255,255,255,.22);opacity:var(--p)"></div>
+
+        <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,calc(.1 + var(--p) * .24));border-radius:4px;overflow:hidden;background:rgba(0,0,0,.55);transform:translateZ(calc(var(--p) * -130px));opacity:calc(.12 + var(--p) * .88)"><div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:52px 52px"></div><span style="position:absolute;right:14px;top:12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6);opacity:calc(var(--p) * 2.6 - .1)">Session volume</span></div>
+
+        <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,.3);border-radius:4px;overflow:hidden;background:#050505">
+          <video data-clip="10_pneumatic_tool_panel" data-pos="26" playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(1.06)"></video>
+          <span style="position:absolute;right:14px;top:12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px #000">On site</span>
+          <span style="position:absolute;right:14px;bottom:12px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:rgba(255,255,255,.72);text-shadow:0 1px 6px #000">Pneumatic tool, molded panel</span>
+        </div>
+
+        <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,calc(.16 + var(--p) * .34));border-radius:4px;overflow:hidden;background:rgba(0,0,0,.34);transform:translateZ(calc(var(--p) * 90px));opacity:calc(.22 + var(--p) * .78)">
+          <div style="position:absolute;inset:12% 9%;display:grid;grid-template-columns:repeat(20,1fr);gap:4px;align-content:start">
+            <sc-for list="{{ sites }}" as="s" hint-placeholder-count="120">
+              <div style="{{ s.s }}"></div>
+            </sc-for>
+          </div>
+          <span style="position:absolute;right:14px;top:12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.86);opacity:calc(var(--p) * 2.6 - .2)">Partner sites</span>
+        </div>
+
+        <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,calc(.14 + var(--p) * .34));border-radius:4px;overflow:hidden;background:rgba(0,0,0,.3);transform:translateZ(calc(var(--p) * 180px));opacity:calc(.14 + var(--p) * .86)">
+          <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.42) 1px,transparent 1.4px);background-size:13px 13px"></div>
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 42% 46%,transparent 0%,rgba(0,0,0,.72) 72%)"></div>
+          <span style="position:absolute;right:14px;top:12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.8);opacity:calc(var(--p) * 2.6 - .7)">Worker network</span>
+        </div>
+
+        <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,calc(.12 + var(--p) * .34));border-radius:4px;overflow:hidden;background:rgba(0,0,0,.26);transform:translateZ(calc(var(--p) * 270px));opacity:calc(.1 + var(--p) * .9)">
+          <div style="position:absolute;inset:46px 26px;display:grid;gap:10px;align-content:start">
+            <sc-for list="{{ regions }}" as="r" hint-placeholder-count="6">
+              <div style="display:grid;gap:5px">
+                <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.6)"><span>{{ r.name }}</span><span>{{ r.n }}</span></div>
+                <div style="height:2px;background:rgba(255,255,255,.12)"><div style="{{ r.bar }}"></div></div>
+              </div>
+            </sc-for>
+          </div>
+          <span style="position:absolute;right:14px;top:12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75);opacity:calc(var(--p) * 2.6 - 1.2)">Regions</span>
+        </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer style="position:relative;z-index:3;background:#000;padding:clamp(72px,10vh,120px) 32px 40px">
+  <div style="max-width:1440px;margin:0 auto;display:grid;gap:64px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:40px;flex-wrap:wrap">
+      <h2 style="margin:0;max-width:16ch;font-size:clamp(30px,4.6vw,68px);font-weight:500;letter-spacing:-.035em;line-height:1.04">Need hands your model has never seen?</h2>
+      <a href="mailto:hello@embr.ai" style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;border:1px solid rgba(255,255,255,.36);padding:17px 30px;color:#fff" style-hover="background:#fff;color:#000;border-color:#fff">hello@embr.ai</a>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-top:26px;border-top:1px solid rgba(255,255,255,.1)">
+      <img src="embr-logo.png" alt="EMBR" style="display:block;height:20px;width:auto;opacity:.55">
+      <span style="display:flex;align-items:center;gap:18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6b6b6b">
+        <span>© 2026 EMBR</span>
+        <a href="https://www.linkedin.com/company/embr" target="_blank" rel="noreferrer" aria-label="LinkedIn" style="display:flex;color:#8a8a8a" style-hover="color:#fff"><svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.05A4.2 4.2 0 0 1 16.6 8.7c3.1 0 4.4 2 4.4 5.2V21h-4v-6.2c0-1.5-.5-2.5-1.9-2.5-1.1 0-1.8.75-2.05 1.5-.1.25-.15.6-.15 1V21H9V9Z"/></svg></a>
+        <a href="mailto:hello@embr.ai" aria-label="Email" style="display:flex;color:#8a8a8a" style-hover="color:#fff"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.6" y="4.6" width="18.8" height="14.8" rx="1.6"/><path d="m3.4 6.4 8.6 6.4 8.6-6.4"/></svg></a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;center&quot;,&quot;bottom&quot;,&quot;corner&quot;],&quot;default&quot;:&quot;center&quot;,&quot;tsType&quot;:&quot;'center'|'bottom'|'corner'&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;geoTone&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;bold&quot;,&quot;plain&quot;],&quot;default&quot;:&quot;bold&quot;,&quot;tsType&quot;:&quot;'bold'|'plain'&quot;,&quot;section&quot;:&quot;Access&quot;},&quot;companies&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;70+&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Numbers&quot;},&quot;workers&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;30,000+&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Numbers&quot;},&quot;countries&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:6,&quot;min&quot;:1,&quot;max&quot;:20,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Numbers&quot;}}">
+// c = where the hands sit, as a % of the full portrait frame height. The crop is
+// derived from each box's own aspect at runtime, because the hero (~1.71) and the
+// slab planes (1.5) show different-sized bands of the same source.
+const SRC_RATIO = 720 / 1280;
+const CLIPS = {
+  "01_barcode_scanning": { c: 24, title: "Barcode scanning and traceability" },
+  "02_interior_cover_fastening": { c: 66, title: "Interior cover fastening" },
+  "03_cylindrical_part_insertion": { c: 62, title: "Cylindrical part insertion" },
+  "04_dashboard_trim_fitment": { c: 44, title: "Dashboard trim-panel fitment" },
+  "05_fixture_cleaning": { c: 39, title: "Fixture cleaning" },
+  "06_pneumatic_panel_adjustment": { c: 37, title: "Pneumatic panel adjustment" },
+  "07_hot_glue_application": { c: 28, title: "Hot-glue application" },
+  "08_fine_fastener_assembly": { c: 47, title: "Fine fastener assembly" },
+  "09_panel_surface_inspection": { c: 32, title: "Molded-panel inspection" },
+  "10_pneumatic_tool_panel": { c: 35, title: "Pneumatic tool on molded panel" },
+  "11_mesh_panel_assembly": { c: 25, title: "Mesh-panel component assembly" },
+  "12_connector_lever_engagement": { c: 48, title: "Connector lever engagement" },
+  "13_label_mount_alignment": { c: 30, title: "Label and mount alignment" },
+  "14_rod_wiring_routing": { c: 38, title: "Rod and wiring routing" },
+  "15_door_latch_installation": { c: 42, title: "Powered door-latch installation" }
+};
+// Frame-checked at 6 points each: every clip here keeps at least one hand in the
+// crop for its whole duration. Dropped 12_connector_lever_engagement (no hands at
+// 0.7s / 3.3s / 4.7s) and 07_hot_glue_application (no hands at 4.4s / 6.9s).
+// Dropped 11_mesh_panel_assembly: measured frame sharpness falls to 3.6 at 2.5s
+// and 2.6 at 4.2s where the camera whips off the work into a blur.
+const HERO = [
+  "15_door_latch_installation",
+  "14_rod_wiring_routing",
+  "09_panel_surface_inspection",
+  "04_dashboard_trim_fitment"
+];
+// Footage is handheld and fast; half speed reads as observation rather than churn.
+const RATE = 0.5;
+
+const POSE = [
+  [48,72],[44,63],[41,54],[39,46],[38,39],
+  [52,60],[53,49],[54,41],[55,34],
+  [59,60],[61,48],[62,39],[63,32],
+  [65,62],[68,51],[70,43],[71,36],
+  [70,68],[74,61],[77,55],[79,50]
+];
+const BONES = [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],[0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]];
+
+class Component extends DCLogic {
+  componentDidMount() {
+    this.hi = 0;
+    this.prepMedia();
+    this.cycleHero();
+    this.heroTimer = setInterval(() => this.cycleHero(true), 8000);
+    this.onVisible = () => { if (!document.hidden) this.resume(); };
+    document.addEventListener("visibilitychange", this.onVisible);
+    this.resumeTimer = setInterval(() => this.resume(), 2500);
+    this.drawPose();
+    this.bindScroll();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.heroTimer);
+    clearInterval(this.resumeTimer);
+    window.removeEventListener("scroll", this.onScroll);
+    window.removeEventListener("resize", this.onResize);
+    document.removeEventListener("visibilitychange", this.onVisible);
+  }
+
+  // A backgrounded tab suspends decoding and leaves every video paused; without
+  // this the page comes back to a frozen frame.
+  resume() {
+    Array.prototype.slice.call(document.querySelectorAll("video[data-clip]")).forEach((v) => {
+      if (v.paused) this.start(v);
+      else if (v.playbackRate !== RATE) v.playbackRate = RATE;
+    });
+  }
+
+  // Centre the hand band inside whatever aspect this particular box has.
+  applyCrop(v) {
+    const meta = CLIPS[v.dataset.clip];
+    if (!meta) return;
+    const r = v.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const band = SRC_RATIO / (r.width / r.height);
+    if (band >= 1) { v.style.objectPosition = "50% 50%"; return; }
+    let pos = (meta.c / 100 - band / 2) / (1 - band) * 100;
+    pos = pos < 0 ? 0 : pos > 100 ? 100 : pos;
+    v.style.objectPosition = "50% " + pos.toFixed(1) + "%";
+  }
+
+  recrop() {
+    Array.prototype.slice.call(document.querySelectorAll("video[data-clip]")).forEach((v) => {
+      if (CLIPS[v.dataset.clip]) this.applyCrop(v);
+    });
+  }
+
+  prepMedia() {
+    const heroWrap = document.getElementById("embr-hero-clips");
+    Array.prototype.slice.call(document.querySelectorAll("video[data-clip]")).forEach((v) => {
+      const slug = v.dataset.clip;
+      if (!slug || slug.indexOf("{") !== -1) return;
+      const isHero = !!(heroWrap && heroWrap.contains(v));
+      this.applyCrop(v);
+      v.muted = true;
+      v.defaultMuted = true;
+      v.loop = true;
+      v.playsInline = true;
+      // Every clip just autoplays and loops natively. Driving play/pause from JS
+      // proved unreliable here (a bare play() resolves without advancing the
+      // clock), so the hero cross-fade only touches opacity. Kept to four clips
+      // so the concurrent decode count stays modest.
+      v.setAttribute("autoplay", "");
+      v.preload = "auto";
+      v.poster = "clips/thumbs/" + slug + ".jpg";
+      v.onerror = () => { v.style.opacity = "0"; };
+      // playbackRate resets whenever the media element reloads, so reassert it.
+      v.addEventListener("loadedmetadata", () => { v.playbackRate = RATE; });
+      v.addEventListener("canplay", () => { v.playbackRate = RATE; if (v.paused) this.start(v); });
+      v.setAttribute("src", "clips/" + slug + ".mp4");
+      this.start(v);
+    });
+  }
+
+  start(v) {
+    if (!v) return;
+    v.setAttribute("autoplay", "");
+    v.playbackRate = RATE;
+    const p = v.play();
+    if (p && p.catch) p.catch(() => {});
+  }
+
+  cycleHero(advance) {
+    const wrap = document.getElementById("embr-hero-clips");
+    if (!wrap) return;
+    const kids = Array.prototype.slice.call(wrap.children);
+    if (!kids.length) return;
+    if (advance) this.hi = (this.hi + 1) % kids.length;
+    kids.forEach((k, i) => { k.style.opacity = i === this.hi ? "1" : "0"; });
+    const cap = document.getElementById("heroCaption");
+    const meta = CLIPS[HERO[this.hi % HERO.length]];
+    if (cap && meta) cap.textContent = meta.title;
+  }
+
+  drawPose() {
+    const host = this.pose;
+    if (!host) return;
+    const box = host.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    const xs = POSE.map((p) => p[0]), ys = POSE.map((p) => p[1]);
+    const minX = Math.min.apply(null, xs), maxX = Math.max.apply(null, xs);
+    const minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
+    const bw = maxX - minX, bh = maxY - minY;
+    const k = (Math.min(box.width, box.height) * 0.78) / Math.max(bw, bh);
+    const ox = (box.width - bw * k) / 2, oy = (box.height - bh * k) / 2;
+    const pt = (p) => [ox + (p[0] - minX) * k, oy + (p[1] - minY) * k];
+
+    host.textContent = "";
+    const frag = document.createDocumentFragment();
+    BONES.forEach(([a, b]) => {
+      const p1 = pt(POSE[a]), p2 = pt(POSE[b]);
+      const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
+      const el = document.createElement("div");
+      el.style.cssText =
+        "position:absolute;left:" + p1[0] + "px;top:" + p1[1] + "px;width:" + Math.sqrt(dx * dx + dy * dy) +
+        "px;height:1px;background:rgba(255,255,255,.5);transform-origin:0 50%;transform:rotate(" +
+        (Math.atan2(dy, dx) * 180 / Math.PI) + "deg)";
+      frag.appendChild(el);
+    });
+    POSE.forEach((p) => {
+      const q = pt(p);
+      const el = document.createElement("div");
+      el.style.cssText =
+        "position:absolute;left:" + q[0] + "px;top:" + q[1] + "px;width:5px;height:5px;" +
+        "margin:-2.5px 0 0 -2.5px;border-radius:50%;background:rgba(255,255,255,.9)";
+      frag.appendChild(el);
+    });
+    host.appendChild(frag);
+  }
+
+  bindScroll() {
+    const clamp = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+    const pairs = [["heroTrack", "heroSticky", true], ["covTrack", "covSticky"], ["accTrack", "accSticky"]];
+    const tick = () => {
+      pairs.forEach(([t, s, isHero]) => {
+        const track = document.getElementById(t);
+        const sticky = document.getElementById(s);
+        if (!track || !sticky) return;
+        const r = track.getBoundingClientRect();
+        const span = r.height - window.innerHeight;
+        if (span <= 0) return;
+        const p = clamp(-r.top / span);
+        if (isHero) { sticky.style.setProperty("--hp", p.toFixed(4)); return; }
+        const vh = window.innerHeight;
+        // Sticky only pins once the track's top hits 0, so while the track is
+        // rising its content sits at the bottom of the screen with black above.
+        // Lifting by r.top pins it visually from the moment it enters, so the
+        // sections cross-fade in place instead of sliding up out of a black gap.
+        // Clamped to one viewport: beyond that the track is below the fold and
+        // lifting it would composite its 3D subtree over the hero from first paint.
+        sticky.style.setProperty("--lift", Math.min(Math.max(0, Math.round(r.top)), vh));
+        const o = clamp((vh - r.top) / (vh * 0.55));
+        sticky.style.setProperty("--p", clamp((p - 0.06) / 0.66).toFixed(4));
+        sticky.style.setProperty("--o", o.toFixed(3));
+        sticky.style.setProperty("--s", (0.955 + 0.045 * o).toFixed(4));
+      });
+    };
+    // Synchronous on purpose: requestAnimationFrame callbacks do not fire in
+    // every embedding context, and a coalescer that never runs leaves --o at 0
+    // (sections render black). Two rect reads and six setProperty calls are
+    // cheap enough to run per event.
+    this.onScroll = tick;
+    this.onResize = () => { this.drawPose(); this.recrop(); tick(); };
+    window.addEventListener("scroll", tick, { passive: true });
+    window.addEventListener("resize", this.onResize);
+    tick();
+  }
+
+  pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  renderVals() {
+    const companies = this.props.companies ?? "70+";
+    const workers = this.props.workers ?? "30,000+";
+    const countries = this.props.countries ?? 6;
+    const bold = (this.props.geoTone ?? "bold") === "bold";
+
+    const heroPos = this.props.heroLayout ?? "center";
+    const heroBase = "position:absolute;z-index:2;pointer-events:none;padding:0 32px;" +
+      "opacity:calc(1 - var(--hp,0) * 1.1);transform:scale(calc(1 - var(--hp,0) * .07));";
+    const heroBoxStyle =
+      heroPos === "bottom"
+        ? heroBase + "left:0;right:0;bottom:14vh;text-align:left;"
+        : heroPos === "corner"
+        ? heroBase + "left:0;bottom:16vh;max-width:14ch;text-align:left;"
+        : heroBase + "inset:0;display:flex;align-items:center;justify-content:center;text-align:center;";
+
+    const tactile = [];
+    for (let r = 0; r < 11; r++) {
+      for (let c = 0; c < 18; c++) {
+        const v = Math.max(0, 1 - Math.hypot(c - 7.5, r - 6.2) / 6.4);
+        tactile.push({ s: "border:1px solid rgba(255,255,255,.05);background:rgba(255,255,255," + (v * v * 0.42).toFixed(3) + ")" });
+      }
+    }
+
+    const BOX = [
+      [12, 22, 26, 20, "ACT-001 pick component"],
+      [46, 16, 30, 26, "ACT-004 align to locator"],
+      [20, 56, 34, 24, "ACT-006 stabilize support hand"],
+      [58, 58, 26, 22, "ACT-023 drive fastener"],
+      [40, 40, 18, 16, "ACT-039 tactile edge inspect"]
+    ];
+
+    const sites = [];
+    for (let i = 0; i < 120; i++) {
+      const on = i % 7 !== 3 && i % 11 !== 5;
+      sites.push({ s: "aspect-ratio:1;border:1px solid rgba(255,255,255," + (on ? ".34" : ".1") + ");background:rgba(255,255,255," + (on ? ".14" : "0") + ")" });
+    }
+
+    const REG = [
+      ["Thailand", "41 sites", 100],
+      ["Vietnam", "11 sites", 27],
+      ["Indonesia", "7 sites", 17],
+      ["Malaysia", "5 sites", 12],
+      ["Philippines", "4 sites", 10],
+      ["Cambodia", "2 sites", 5]
+    ];
+
+    return {
+      heroBoxStyle,
+      poseRef: (el) => { this.pose = el; },
+      heroClips: HERO.map((s) => ({ slug: s })),
+      tactile,
+
+      boxes: BOX.map(([x, y, w, h, t]) => ({
+        t,
+        s: "position:absolute;left:" + x + "%;top:" + y + "%;width:" + w + "%;height:" + h +
+           "%;border:1px solid rgba(255,255,255,.5)"
+      })),
+
+      sites,
+
+      regions: REG.map(([name, n, pct]) => ({
+        name, n,
+        bar: "height:100%;width:" + pct + "%;background:rgba(255,255,255,.72)"
+      })),
+
+      stats: [
+        { n: companies, k: "Partner companies" },
+        { n: workers, k: "Skilled workers in network" }
+      ],
+
+      geoLine: bold
+        ? "If it is made in Southeast Asia, we can put a camera on it."
+        : "Standing access across Southeast Asian industry.",
+
+      sectors: [
+        "Manufacturing and assembly",
+        "Clinical procedures",
+        "Electronics and PCB rework",
+        "Food processing and seafood",
+        "Automotive repair",
+        "Construction and welding",
+        "Chemicals and lab work",
+        "Jewelry and fine handwork",
+        "Machine shop and CNC",
+        "Textile and garment"
+      ].map((t, i) => ({ t, n: this.pad(i + 1) }))
+    };
+  }
+}
+</script>
+</body>
+</html>
