@@ -25,6 +25,30 @@ a{color:#fff;text-decoration:none}
    fixing it needs no per-frame update, so it cannot lag. Both tracks have an
    explicit height, so taking the sticky out of flow does not collapse them. */
 .embr-pin{position:fixed!important;top:0!important;left:0;right:0}
+
+/* ---- Mobile ----------------------------------------------------------
+   The two content sections are side-by-side grids: a 3D clip stack next to
+   a column of copy. Below ~760px that leaves each about 150px, so the 3D
+   scene hangs off the edge and the copy runs taller than the sticky's
+   100svh and gets clipped. Stack them instead — scene on top, copy under —
+   and tighten the type so a whole section still fits one viewport.
+   Body copy is separated from the mono eyebrows/labels by matching on the
+   inline font-family, since this design carries no classes of its own. */
+@media (max-width:760px){
+  #covSticky,#accSticky{grid-template-columns:1fr!important;align-content:center!important;gap:18px!important}
+  /* Scene first in both sections, regardless of source order. */
+  #covSticky>div:nth-child(1),#accSticky>div:nth-child(2){order:1!important;height:min(31svh,260px)!important}
+  #covSticky>div:nth-child(2),#accSticky>div:nth-child(1){order:2!important;max-width:none!important}
+  /* Less yaw and a smaller scale so the stack stays inside the screen. */
+  #covSticky>div:nth-child(1)>div{transform:rotateX(13deg) rotateY(-20deg) scale(.62)!important}
+  #accSticky>div:nth-child(2)>div{transform:rotateX(13deg) rotateY(20deg) scale(.62)!important}
+  #covSticky h2,#accSticky h2{font-size:27px!important;line-height:1.1!important}
+  #covSticky p:not([style*="JetBrains"]),#accSticky p:not([style*="JetBrains"]){font-size:13.5px!important;line-height:1.45!important}
+  #covSticky span[style*="JetBrains"],#accSticky span[style*="JetBrains"]{max-width:none!important;font-size:9.5px!important}
+  /* Hero footer ticker: two justified columns collide at this width. */
+  #heroSticky .embr-ticker{flex-direction:column!important;align-items:flex-start!important;gap:6px!important;font-size:9.5px!important;left:18px!important;right:18px!important}
+  #heroSticky .embr-ticker>*{text-align:left!important}
+}
 a:hover{color:#8a8a8a}
 ::selection{background:#fff;color:#000}
 </style>
@@ -57,7 +81,7 @@ a:hover{color:#8a8a8a}
     <h1 style="margin:0;font-size:clamp(46px,10.4vw,196px);font-weight:500;letter-spacing:-.045em;line-height:.9">Skilled hands,<br>captured.</h1>
   </div>
 
-  <div style="position:absolute;left:32px;right:32px;bottom:26px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;opacity:calc(1 - var(--hp,0) * 1.35);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.62)">
+  <div class="embr-ticker" style="position:absolute;left:32px;right:32px;bottom:26px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;opacity:calc(1 - var(--hp,0) * 1.35);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.62)">
     <span style="display:block;max-width:520px;line-height:1.7">Multimodal robotics data from real workplaces<br>across Southeast Asia</span>
     <span id="heroCaption" style="text-align:right;max-width:280px;line-height:1.7;color:rgba(255,255,255,.5)"></span>
   </div>
