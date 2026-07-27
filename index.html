@@ -18,6 +18,13 @@
 html{background:#000}
 body{margin:0;background:#000;color:#fff;font-family:Archivo,"Helvetica Neue",Helvetica,sans-serif;-webkit-font-smoothing:antialiased;text-wrap:pretty}
 a{color:#fff;text-decoration:none}
+/* While a section is entering the viewport it must sit at the top of the
+   screen. Doing that by translating a sticky element up by its own offset
+   means the compositor moves it with the scroll and the main thread cancels
+   that a frame later — the panel visibly shakes against the scroll. Genuinely
+   fixing it needs no per-frame update, so it cannot lag. Both tracks have an
+   explicit height, so taking the sticky out of flow does not collapse them. */
+.embr-pin{position:fixed!important;top:0!important;left:0;right:0}
 a:hover{color:#8a8a8a}
 ::selection{background:#fff;color:#000}
 </style>
@@ -58,7 +65,7 @@ a:hover{color:#8a8a8a}
 </section>
 
 <section id="covTrack" style="position:relative;z-index:1;background:#000;height:230vh">
-  <div id="covSticky" style="--p:0;--lift:0;position:sticky;top:0;height:100svh;overflow:hidden;transform:translateY(calc(var(--lift,0) * -1px));display:grid;grid-template-columns:1.34fr .66fr;align-items:center;gap:clamp(24px,4vw,72px);padding:0 clamp(18px,2.4vw,32px)">
+  <div id="covSticky" style="--p:0;position:sticky;top:0;height:100svh;overflow:hidden;display:grid;grid-template-columns:1.34fr .66fr;align-items:center;gap:clamp(24px,4vw,72px);padding:0 clamp(18px,2.4vw,32px)">
 
     <div style="position:relative;height:min(72svh,700px);perspective:2600px;opacity:var(--o,1);transform:scale(var(--s,1))">
       <div style="position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(14deg) rotateY(-29deg) translateX(9%) scale(.72)">
@@ -119,7 +126,7 @@ a:hover{color:#8a8a8a}
 </section>
 
 <section id="accTrack" style="position:relative;z-index:2;background:#000;height:230vh">
-  <div id="accSticky" style="--p:0;--lift:0;position:sticky;top:0;height:100svh;overflow:hidden;transform:translateY(calc(var(--lift,0) * -1px));display:grid;grid-template-columns:.66fr 1.34fr;align-items:center;gap:clamp(24px,4vw,72px);padding:0 clamp(18px,2.4vw,32px)">
+  <div id="accSticky" style="--p:0;position:sticky;top:0;height:100svh;overflow:hidden;display:grid;grid-template-columns:.66fr 1.34fr;align-items:center;gap:clamp(24px,4vw,72px);padding:0 clamp(18px,2.4vw,32px)">
 
     <div style="display:grid;gap:clamp(12px,1.8vh,24px);align-content:center;max-width:520px;min-height:0;max-height:100%;opacity:var(--o,1);transform:translateY(calc((1 - var(--o,1)) * 18px));order:1">
       <p style="margin:0;display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8a8a8a"><span style="display:inline-block;width:0;height:0;border-left:7px solid #8a8a8a;border-bottom:7px solid transparent"></span>Access</p>
@@ -390,6 +397,7 @@ class Component extends DCLogic {
     // these subtrees are deep 3D scenes. Skipping writes whose value did not
     // change keeps most scroll frames free of style/layout work entirely.
     const last = {};
+    const pinned = {};
     const put = (el, id, k, v) => {
       const key = id + k;
       if (last[key] === v) return;
@@ -416,13 +424,16 @@ class Component extends DCLogic {
         const sticky = reads[i][0], id = reads[i][1], isHero = reads[i][2], top = reads[i][3], p = reads[i][4];
         if (isHero) { put(sticky, id, "--hp", p.toFixed(4)); continue; }
         // Sticky only pins once the track's top hits 0, so while the track is
-        // rising its content sits at the bottom of the screen with black above.
-        // Lifting by r.top pins it visually from the moment it enters, so the
-        // sections cross-fade in place instead of sliding up out of a black gap.
-        // Clamped to one viewport: beyond that the track is below the fold and
-        // lifting it would composite its 3D subtree over the hero from first paint.
+        // rising its content would sit at the bottom of the screen with black
+        // above. Pin it for real while it is entering so the sections cross-fade
+        // in place instead of sliding up out of a black gap. Only while it is
+        // actually on screen: past one viewport the track is below the fold and
+        // pinning it would composite its 3D subtree over the hero from first
+        // paint. At top === 0 fixed and sticky coincide, so the swap is
+        // seamless; at top === vh the section is still fully transparent.
+        const pin = top > 0 && top < vh;
+        if (pinned[id] !== pin) { pinned[id] = pin; sticky.classList.toggle("embr-pin", pin); }
         const o = clamp((vh - top) / (vh * 0.55));
-        put(sticky, id, "--lift", String(Math.min(Math.max(0, Math.round(top)), vh)));
         put(sticky, id, "--p", clamp((p - 0.06) / 0.66).toFixed(4));
         put(sticky, id, "--o", o.toFixed(3));
         put(sticky, id, "--s", (0.955 + 0.045 * o).toFixed(4));
