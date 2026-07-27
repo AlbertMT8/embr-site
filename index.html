@@ -440,18 +440,22 @@ class Component extends DCLogic {
       }
     };
     // Coalesce to one update per frame: a fling fires many scroll events per
-    // frame and only the last one is visible. rAF callbacks do not fire in
-    // every embedding context, so until we have seen one actually run we keep
-    // calling through synchronously — a coalescer that never runs would leave
-    // --o at 0 and render the sections black.
+    // frame and only the last one is ever seen. rAF callbacks do not fire in
+    // every embedding context though, and a coalescer whose frame never runs
+    // would latch shut and freeze every section at its last value. So the gate
+    // is self-healing: if a requested frame has not run by the deadline, give
+    // up on rAF permanently and drive tick synchronously from then on.
     this.raf = 0;
-    this.rafOK = false;
-    if (typeof requestAnimationFrame === "function") {
-      requestAnimationFrame(() => { this.rafOK = true; });
-    }
+    this.rafAt = 0;
+    this.rafDead = typeof requestAnimationFrame !== "function";
     const schedule = () => {
-      if (!this.rafOK) { tick(); return; }
-      if (this.raf) return;
+      if (this.raf) {
+        if (performance.now() - this.rafAt < 250) return;
+        this.raf = 0;
+        this.rafDead = true;
+      }
+      if (this.rafDead) { tick(); return; }
+      this.rafAt = performance.now();
       this.raf = requestAnimationFrame(tick);
     };
     this.onScroll = schedule;
