@@ -264,6 +264,7 @@ class Component extends DCLogic {
   componentWillUnmount() {
     clearInterval(this.heroTimer);
     clearInterval(this.resumeTimer);
+    if (this.raf) cancelAnimationFrame(this.raf);
     window.removeEventListener("scroll", this.onScroll);
     window.removeEventListener("resize", this.onResize);
     document.removeEventListener("visibilitychange", this.onVisible);
@@ -383,37 +384,68 @@ class Component extends DCLogic {
   bindScroll() {
     const clamp = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
     const pairs = [["heroTrack", "heroSticky", true], ["covTrack", "covSticky"], ["accTrack", "accSticky"]];
+    const els = {};
+    const at = (id) => (els[id] || (els[id] = document.getElementById(id)));
+    // Writing a custom property invalidates the sticky's whole subtree, and
+    // these subtrees are deep 3D scenes. Skipping writes whose value did not
+    // change keeps most scroll frames free of style/layout work entirely.
+    const last = {};
+    const put = (el, id, k, v) => {
+      const key = id + k;
+      if (last[key] === v) return;
+      last[key] = v;
+      el.style.setProperty(k, v);
+    };
+    const reads = [];
     const tick = () => {
-      pairs.forEach(([t, s, isHero]) => {
-        const track = document.getElementById(t);
-        const sticky = document.getElementById(s);
-        if (!track || !sticky) return;
+      this.raf = 0;
+      const vh = window.innerHeight;
+      // Read every rect before writing anything. Interleaving a rect read with
+      // a custom-property write forces a synchronous layout of the 3D subtree
+      // per section, per event — the single biggest cost on this page.
+      reads.length = 0;
+      for (let i = 0; i < pairs.length; i++) {
+        const track = at(pairs[i][0]), sticky = at(pairs[i][1]);
+        if (!track || !sticky) continue;
         const r = track.getBoundingClientRect();
-        const span = r.height - window.innerHeight;
-        if (span <= 0) return;
-        const p = clamp(-r.top / span);
-        if (isHero) { sticky.style.setProperty("--hp", p.toFixed(4)); return; }
-        const vh = window.innerHeight;
+        const span = r.height - vh;
+        if (span <= 0) continue;
+        reads.push([sticky, pairs[i][1], pairs[i][2], r.top, clamp(-r.top / span)]);
+      }
+      for (let i = 0; i < reads.length; i++) {
+        const sticky = reads[i][0], id = reads[i][1], isHero = reads[i][2], top = reads[i][3], p = reads[i][4];
+        if (isHero) { put(sticky, id, "--hp", p.toFixed(4)); continue; }
         // Sticky only pins once the track's top hits 0, so while the track is
         // rising its content sits at the bottom of the screen with black above.
         // Lifting by r.top pins it visually from the moment it enters, so the
         // sections cross-fade in place instead of sliding up out of a black gap.
         // Clamped to one viewport: beyond that the track is below the fold and
         // lifting it would composite its 3D subtree over the hero from first paint.
-        sticky.style.setProperty("--lift", Math.min(Math.max(0, Math.round(r.top)), vh));
-        const o = clamp((vh - r.top) / (vh * 0.55));
-        sticky.style.setProperty("--p", clamp((p - 0.06) / 0.66).toFixed(4));
-        sticky.style.setProperty("--o", o.toFixed(3));
-        sticky.style.setProperty("--s", (0.955 + 0.045 * o).toFixed(4));
-      });
+        const o = clamp((vh - top) / (vh * 0.55));
+        put(sticky, id, "--lift", String(Math.min(Math.max(0, Math.round(top)), vh)));
+        put(sticky, id, "--p", clamp((p - 0.06) / 0.66).toFixed(4));
+        put(sticky, id, "--o", o.toFixed(3));
+        put(sticky, id, "--s", (0.955 + 0.045 * o).toFixed(4));
+      }
     };
-    // Synchronous on purpose: requestAnimationFrame callbacks do not fire in
-    // every embedding context, and a coalescer that never runs leaves --o at 0
-    // (sections render black). Two rect reads and six setProperty calls are
-    // cheap enough to run per event.
-    this.onScroll = tick;
+    // Coalesce to one update per frame: a fling fires many scroll events per
+    // frame and only the last one is visible. rAF callbacks do not fire in
+    // every embedding context, so until we have seen one actually run we keep
+    // calling through synchronously — a coalescer that never runs would leave
+    // --o at 0 and render the sections black.
+    this.raf = 0;
+    this.rafOK = false;
+    if (typeof requestAnimationFrame === "function") {
+      requestAnimationFrame(() => { this.rafOK = true; });
+    }
+    const schedule = () => {
+      if (!this.rafOK) { tick(); return; }
+      if (this.raf) return;
+      this.raf = requestAnimationFrame(tick);
+    };
+    this.onScroll = schedule;
     this.onResize = () => { this.drawPose(); this.recrop(); tick(); };
-    window.addEventListener("scroll", tick, { passive: true });
+    window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", this.onResize);
     tick();
   }
