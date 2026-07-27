@@ -39,9 +39,13 @@ a{color:#fff;text-decoration:none}
   /* Scene first in both sections, regardless of source order. */
   #covSticky>div:nth-child(1),#accSticky>div:nth-child(2){order:1!important;height:min(31svh,260px)!important}
   #covSticky>div:nth-child(2),#accSticky>div:nth-child(1){order:2!important;max-width:none!important}
-  /* Less yaw and a smaller scale so the stack stays inside the screen. */
-  #covSticky>div:nth-child(1)>div{transform:rotateX(13deg) rotateY(-20deg) scale(.62)!important}
-  #accSticky>div:nth-child(2)>div{transform:rotateX(13deg) rotateY(20deg) scale(.62)!important}
+  /* Less yaw and a smaller scale so the stack stays inside the screen. The
+     yaw throws the projection off-centre — measured at full expansion
+     (--p:1, the widest the stack ever gets) it hangs 22px off one edge with
+     48px spare on the other, so nudge it back to centre rather than shrink
+     it further. Mirrored per section, since the two scenes yaw opposite ways. */
+  #covSticky>div:nth-child(1)>div{transform:rotateX(13deg) rotateY(-20deg) translateX(10%) scale(.62)!important}
+  #accSticky>div:nth-child(2)>div{transform:rotateX(13deg) rotateY(20deg) translateX(-10%) scale(.62)!important}
   #covSticky h2,#accSticky h2{font-size:27px!important;line-height:1.1!important}
   #covSticky p:not([style*="JetBrains"]),#accSticky p:not([style*="JetBrains"]){font-size:13.5px!important;line-height:1.45!important}
   #covSticky span[style*="JetBrains"],#accSticky span[style*="JetBrains"]{max-width:none!important;font-size:9.5px!important}
