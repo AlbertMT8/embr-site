@@ -71,9 +71,9 @@ a:hover{color:#8a8a8a}
 <section id="heroTrack" style="position:relative;height:125vh;background:#000">
   <div id="heroSticky" style="--hp:0;position:sticky;top:0;height:100svh;overflow:hidden;background:#000">
   <div id="embr-hero-clips" style="position:absolute;inset:0">
-    <sc-for list="{{ heroClips }}" as="c" hint-placeholder-count="4">
+    <sc-for list="{{ heroClips }}" as="c" hint-placeholder-count="6">
       <div style="position:absolute;inset:0;opacity:0;transition:opacity 420ms linear">
-        <video data-clip="{{ c.slug }}" playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08) brightness(.94)"></video>
+        <video data-clip="{{ c.slug }}" playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(1.06) saturate(1.04) brightness(.97)"></video>
       </div>
     </sc-for>
   </div>
@@ -258,7 +258,13 @@ const CLIPS = {
   "12_connector_lever_engagement": { c: 48, title: "Connector lever engagement" },
   "13_label_mount_alignment": { c: 30, title: "Label and mount alignment" },
   "14_rod_wiring_routing": { c: 38, title: "Rod and wiring routing" },
-  "15_door_latch_installation": { c: 42, title: "Powered door-latch installation" }
+  "15_door_latch_installation": { c: 42, title: "Powered door-latch installation" },
+  "c01_corner_weld_sparks": { c: 36, title: "Corner welding", noThumb: true },
+  "c05_measure_long_span": { c: 42, title: "Long-span frame measurement", noThumb: true },
+  "c06_weld_setup_alignment": { c: 46, title: "Weld setup and joint alignment", noThumb: true },
+  "c07_arc_weld_electrode": { c: 50, title: "Electrode positioning", noThumb: true },
+  "c08_vertical_joint_fitup": { c: 48, title: "Vertical joint fit-up", noThumb: true },
+  "c09_alternate_angle_weld": { c: 36, title: "Two-hand welding", noThumb: true }
 };
 // Frame-checked at 6 points each: every clip here keeps at least one hand in the
 // crop for its whole duration. Dropped 12_connector_lever_engagement (no hands at
@@ -267,9 +273,11 @@ const CLIPS = {
 // and 2.6 at 4.2s where the camera whips off the work into a blur.
 const HERO = [
   "15_door_latch_installation",
+  "c09_alternate_angle_weld",
   "14_rod_wiring_routing",
+  "c05_measure_long_span",
   "09_panel_surface_inspection",
-  "04_dashboard_trim_fitment"
+  "c07_arc_weld_electrode"
 ];
 // Footage is handheld and fast; half speed reads as observation rather than churn.
 const RATE = 0.5;
@@ -288,7 +296,7 @@ class Component extends DCLogic {
     this.hi = 0;
     this.prepMedia();
     this.cycleHero();
-    this.heroTimer = setInterval(() => this.cycleHero(true), 8000);
+    this.heroTimer = setInterval(() => this.cycleHero(true), 5600);
     this.onVisible = () => { if (!document.hidden) this.resume(); };
     document.addEventListener("visibilitychange", this.onVisible);
     this.resumeTimer = setInterval(() => this.resume(), 2500);
@@ -299,6 +307,7 @@ class Component extends DCLogic {
   componentWillUnmount() {
     clearInterval(this.heroTimer);
     clearInterval(this.resumeTimer);
+    (this.warmTimers || []).forEach(clearTimeout);
     if (this.raf) cancelAnimationFrame(this.raf);
     window.removeEventListener("scroll", this.onScroll);
     window.removeEventListener("resize", this.onResize);
@@ -309,6 +318,7 @@ class Component extends DCLogic {
   // this the page comes back to a frozen frame.
   resume() {
     Array.prototype.slice.call(document.querySelectorAll("video[data-clip]")).forEach((v) => {
+      if (!v.getAttribute("src")) return;
       if (v.paused) this.start(v);
       else if (v.playbackRate !== RATE) v.playbackRate = RATE;
     });
@@ -344,20 +354,51 @@ class Component extends DCLogic {
       v.defaultMuted = true;
       v.loop = true;
       v.playsInline = true;
-      // Every clip just autoplays and loops natively. Driving play/pause from JS
-      // proved unreliable here (a bare play() resolves without advancing the
-      // clock), so the hero cross-fade only touches opacity. Kept to four clips
-      // so the concurrent decode count stays modest.
-      v.setAttribute("autoplay", "");
-      v.preload = "auto";
-      v.poster = "clips/thumbs/" + slug + ".jpg";
-      v.onerror = () => { v.style.opacity = "0"; };
+      if (!(CLIPS[slug] && CLIPS[slug].noThumb)) v.poster = "clips/thumbs/" + slug + ".jpg";
+      // A clip whose file is missing must not hold a slot in the rotation, or
+      // its turn shows as black. Mark the slot dead so cycleHero can skip it.
+      v.onerror = () => { v.style.opacity = "0"; v.dataset.dead = "1"; };
       // playbackRate resets whenever the media element reloads, so reassert it.
       v.addEventListener("loadedmetadata", () => { v.playbackRate = RATE; });
       v.addEventListener("canplay", () => { v.playbackRate = RATE; if (v.paused) this.start(v); });
+      // Hero clips get NO src here; warmUp() attaches them in stages. Attaching
+      // src while the autoplay attribute is present is what actually starts
+      // playback — a bare play() is unreliable.
+      if (isHero) { v.preload = "none"; return; }
+      v.setAttribute("autoplay", "");
+      v.preload = "auto";
       v.setAttribute("src", "clips/" + slug + ".mp4");
       this.start(v);
     });
+    this.warmUp();
+  }
+
+  // Chrome discards the buffered media of a paused offscreen <video> and
+  // re-downloads it on resume, so pausing between laps cost a full re-fetch per
+  // clip per lap. Instead every hero clip is attached exactly once and then left
+  // running. Attachment is staggered so landing costs two clips, not six.
+  warmUp() {
+    const wrap = document.getElementById("embr-hero-clips");
+    if (!wrap) return;
+    const kids = Array.prototype.slice.call(wrap.children);
+    if (!kids.length) return;
+    const vids = kids.map((k) => k.querySelector("video")).filter(Boolean);
+    const attach = (v) => {
+      if (!v) return;
+      const slug = v.dataset.clip;
+      if (!slug || slug.indexOf("{") !== -1 || v.getAttribute("src")) return;
+      v.dataset.want = "1";
+      v.setAttribute("autoplay", "");
+      v.preload = "auto";
+      v.setAttribute("src", "clips/" + slug + ".mp4");
+      this.start(v);
+    };
+    attach(vids[0]);
+    attach(vids[1]);
+    this.warmTimers = [];
+    for (let i = 2; i < vids.length; i++) {
+      this.warmTimers.push(setTimeout(() => attach(vids[i]), (i - 1) * 2600));
+    }
   }
 
   start(v) {
@@ -373,8 +414,19 @@ class Component extends DCLogic {
     if (!wrap) return;
     const kids = Array.prototype.slice.call(wrap.children);
     if (!kids.length) return;
-    if (advance) this.hi = (this.hi + 1) % kids.length;
+    if (advance) {
+      // Step over slots whose clip failed to load rather than fading to black.
+      for (let n = 0; n < kids.length; n++) {
+        this.hi = (this.hi + 1) % kids.length;
+        const vv = kids[this.hi].querySelector("video");
+        if (!vv || vv.dataset.dead !== "1") break;
+      }
+    }
     kids.forEach((k, i) => { k.style.opacity = i === this.hi ? "1" : "0"; });
+    // Guarantee the clip being faded in is actually moving; a late attach or a
+    // throttled tab can otherwise leave an opaque but frozen frame on screen.
+    const vis = kids[this.hi] && kids[this.hi].querySelector("video");
+    if (vis) { if (!vis.getAttribute("src")) this.warmUp(); if (vis.paused) this.start(vis); }
     const cap = document.getElementById("heroCaption");
     const meta = CLIPS[HERO[this.hi % HERO.length]];
     if (cap && meta) cap.textContent = meta.title;
