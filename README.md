@@ -28,7 +28,8 @@ dependencies: unpkg (React/ReactDOM) and Google Fonts (Archivo + JetBrains Mono)
 | `support.js` | Claude Design runtime (`dc-runtime`) — parses `<x-dc>`, compiles the logic, mounts via React. |
 | `clips/*.mp4` | 21 clips referenced as `clips/<slug>.mp4` — 15 assembly (`01`–`15`) plus 6 welding (`c0*`). |
 | `clips/thumbs/*.jpg` | Poster frames, used as each video's `poster`. |
-| `embr-logo.png`, `embr-mark.png` | Brand assets. |
+| `embr-logo.png`, `assets/embr-mark.png` | Brand assets. |
+| `favicon.ico`, `icon.png`, `apple-touch-icon.png` | Site favicons, generated from `assets/embr-mark.png`. |
 
 ## Editing
 
